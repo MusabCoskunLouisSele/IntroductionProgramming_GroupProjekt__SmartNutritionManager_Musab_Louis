@@ -1,0 +1,137 @@
+# Smart Nutrition Manager: Personalized calorie and diet tracking system.
+# The calculations and mathematical formulas are based on research.
+
+# 1. Function to read and validate the user's sex input.
+def read_sex(prompt):
+# Using a while True loop to keep asking the user for valid input, i.e. "W" "M".
+  while True:
+# Using lower() method to make it case insensitive.
+      sex = input(prompt).lower()
+# Using if to check the input and exiting the loop with return, if the input is valid.
+      if sex in ["w", "m"]:
+          return sex
+# Asking the user to input a valid input, if they didn´t do so bevor.
+      else:
+          print("Incorrect input - please enter your sex (M/W).")
+
+# 2. Function to read and validate the user's weight goal (gain or lose weight).
+def read_goal(prompt):
+# Using a while True loop to keep asking the user until the input is valid.
+  while True:
+      goal = input(prompt).lower()
+#Using if to check the input and exiting the loop with return, if the input is valid.
+      if goal in ["gain", "lose"]:
+          return goal
+# Else and print error message for invalid input.
+      else:
+          print("Incorrect input - please enter your goal (gain/lose).")
+
+# 3. Function to read and validate integer input (used for height, weight, age, etc.).
+def read_integer(prompt):
+# Using a while True loop to keep asking the user until the input is valid.
+  while True:
+# Try ... except ValueError to prompt the user to input validly, i.e. an integer number.
+# This input is needed for height, weight etc. 
+      try:
+          return int(input(prompt))
+      except ValueError:
+          print("Incorrect input - please try again. Thank you!")
+
+# 4. Function to calculate macronutrients based on the chosen diet and daily calorie.
+def calculate_macros(diet_type, daily_calories):
+# Each diet type (1-5) has a specific distribution of carbohydrates, fats, and proteins.
+# The calculations are based on the daily calorie intake.
+# Using if / elif to determine the distribution of macronutrients for the choosen diet type.
+  if diet_type == 1:
+      print("Standard Balanced Diet:")
+# We used "--------------------" to increase the readability from a user's perspective.
+      print("--------------------")
+      carbs = round((daily_calories * 0.45) / 4)
+      fats = round((daily_calories * 0.20) / 9)
+      proteins = round((daily_calories * 0.35) / 4)
+  elif diet_type == 2:
+      print("Low Carb Diet:")
+      print("--------------------")
+      carbs = round((daily_calories * 0.05) / 4)
+      fats = round((daily_calories * 0.40) / 9)
+      proteins = round((daily_calories * 0.55) / 4)
+  elif diet_type == 3:
+      print("Ketogenic Diet:")
+      print("--------------------")
+      carbs = round((daily_calories * 0.05) / 4)
+      fats = round((daily_calories * 0.70) / 9)
+      proteins = round((daily_calories * 0.25) / 4)
+  elif diet_type == 4:
+      print("Vegetarian Diet:")
+      print("--------------------")
+      carbs = round((daily_calories * 0.40) / 4)
+      fats = round((daily_calories * 0.20) / 9)
+      proteins = round((daily_calories * 0.40) / 4)
+  elif diet_type == 5:
+      print("Vegan Diet:")
+      print("--------------------")
+      carbs = round((daily_calories * 0.50) / 4)
+      fats = round((daily_calories * 0.20) / 9)
+      proteins = round((daily_calories * 0.30) / 4)
+# Printing the informations regarding the distributions of macronutrients for the user.
+  print(
+      f"To {goal} {precise_goal_kg} kg in {time_to_reach_goal} weeks you have to eat: \n {carbs} grams of carbohydrates \n {fats} grams of fats \n {proteins} grams of protein \n every day!")
+
+
+# Introducing and explaining the calorie tracker to the user.
+print("Hey! I hope you're doing well. This is a calorie tracker. Please answer the following questions in order to calculate your daily calorie consumption")
+
+# Reading user inputs for sex, height, weight, and age.
+sex = read_sex("Please enter your sex (W/M): ")
+height = read_integer("Please enter your height in cm: ")
+weight = read_integer("Please enter your weight in kg: ")
+age = read_integer("Please enter your age in years: ")
+
+# Analyzing and determining the impact of weekly physical activity on daily calorie expenditure.
+weekly_activity = read_integer("Please enter your weekly hours of sport: ")
+daily_activity = (weekly_activity * 500) / 7
+daily_calories_consumption = 0
+
+# Calculating daily calorie consumption based on sex, height, weight, age, and activity level.
+if sex == "m":
+  daily_calories_consumption = (10 * weight) + (6.25 * height) - (5 * age) + 5 + daily_activity
+else:
+  daily_calories_consumption = (10 * weight) + (6.25 * height) - (5 * age) - 165 + daily_activity
+
+# Printing the user-specific maintenance calorie intake.
+print("--------------------")
+print("Your estimated daily calorie consumption is ", round(daily_calories_consumption), "calories.")
+print("--------------------")
+
+# Reading user's weight goal and the desired timeframe to achieve it.
+goal = read_goal("What is your goal? Do you want to gain or lose weight (gain/lose)? ")
+precise_goal_kg = read_integer("How many kilograms? ")
+time_to_reach_goal = read_integer("In how many weeks do you want to achieve your goal? ")
+
+# Calculations depending on the goal "gain" or "lose".
+# 7700 calories is equal to 1 kg and is needed here for the amount of calories total.
+amount_of_calories = precise_goal_kg * 7700
+daily_calories = (amount_of_calories / time_to_reach_goal) / 7
+if goal == "gain":
+  daily_calories_consumption += daily_calories
+elif goal == "lose":
+  daily_calories_consumption -= daily_calories
+
+# Displaying the final calculated daily calorie intake for the goal of the user.
+print("--------------------")
+print(f"To {goal} {precise_goal_kg} kg in {time_to_reach_goal} weeks you have to eat {round(daily_calories_consumption)} calories a day!")
+print("--------------------")
+
+# Prompting for diet type selection.
+# Using while True loop to get a valid diet type input.
+while True:
+  diet_type = read_integer(
+      f"In order to {goal} {precise_goal_kg} kg, which diet would you like to choose? \n Please choose an option: \n 1: Standard Balanced Diet \n 2: Low Carbohydrates Diet \n 3: Ketogenic Diet \n 4: Vegetarian Diet \n 5: Vegan Diet \n Your option (1-5): "
+  )
+  
+# Allowing calculation and exiting the loop, if conditionals are correct.
+  if 1 <= diet_type <= 5:
+      calculate_macros(diet_type, daily_calories_consumption)
+      break
+  else:
+      print("Incorrect input - Please enter a number between 1 and 5.")
